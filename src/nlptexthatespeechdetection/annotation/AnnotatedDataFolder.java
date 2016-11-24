@@ -90,4 +90,27 @@ public class AnnotatedDataFolder {
         }
         return listOfStrings;
     }
+    
+    /**
+     * untuk testing
+     */
+    public static void main (String [] args) throws NotDirectoryException, FileNotFoundException{
+        AnnotatedDataFolder dataFolder = new AnnotatedDataFolder("data");
+        List<String> notHateSpeech = dataFolder.loadNotHateSpeechStrings();
+        List<String> hateSpeech = dataFolder.loadHateSpeechStrings();
+        System.out.println("======NOT HATE SPEECH=======");
+        for (String s : notHateSpeech){
+            System.out.println();
+            System.out.println(s);
+        }
+        System.out.println();
+        System.out.println();
+        System.out.println("======HATE SPEECH=======");
+        for (String s : hateSpeech){
+            System.out.println();
+            System.out.println(s);
+        }
+        System.out.println();
+        System.out.println();
+    }
 }
