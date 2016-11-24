@@ -17,7 +17,16 @@ public class TwitterStreaming {
         StatusListener listener = new StatusListener() {
             @Override
             public void onStatus(Status status) {
+                if (status.getLang().equals("in")){
                 System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText() + " * " + status.getId() + " # " + status.getLang() + " $ " + (status.getGeoLocation() == null ? "NULLGEO" : status.getGeoLocation().toString()));
+                System.out.println();
+                System.out.println("lang: " + status.getLang());
+                System.out.println();
+                System.out.println();
+                    
+                }else{
+                    System.out.println("ignoring non-indonesian tweet");
+                }
 //                if (status.getGeoLocation() != null) {
 //                    System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText() + " * " + status.getId() + " $ " + status.getGeoLocation().toString());
 //                }
@@ -56,7 +65,8 @@ public class TwitterStreaming {
         
         FilterQuery filterQuery = new FilterQuery();
         double [][]location ={{-6.1745,106.8227},{-6.9175,107.6191}};
-        filterQuery.locations(location);
+        //filterQuery.locations(location);
+        filterQuery.language("in");
         twitterStream.filter(filterQuery);
         
         twitterStream.sample();
