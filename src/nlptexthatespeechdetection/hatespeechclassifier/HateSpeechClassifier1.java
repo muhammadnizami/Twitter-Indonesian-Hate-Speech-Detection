@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import nlptexthatespeechdetection.hatespeechclassifier.Logistic.Instance;
 import static nlptexthatespeechdetection.hatespeechclassifier.TrainDoc2Vec.getTrainedDoc2Vec;
@@ -42,6 +43,10 @@ public class HateSpeechClassifier1 {
         float [] featureVector = doc2vec.getUnseenDocVector(str);
         return logistic.classify(featureVector);
     }
+    
+    public boolean isHateSpeech(String str,double boundary){
+        return classify(str)>=boundary;
+    }
         
     public List<Logistic.Instance> instancesFromLabeledData(String [][] labeledData,
             String trueLabel){
@@ -58,20 +63,39 @@ public class HateSpeechClassifier1 {
         return new Logistic.Instance(label,x);
     }
     
+    public ConfusionMatrix test(String[][] testSet, String trueStr){
+        ConfusionMatrix confusionMatrix = new ConfusionMatrix();
+        for (String [] instance : testSet){
+            boolean predict = isHateSpeech(instance[0],0.5);
+            boolean actual = instance[1].equals(trueStr);
+            confusionMatrix.add(predict, actual);
+        }
+        return confusionMatrix;
+    }
+    
     public static void main(String [] args) throws NotDirectoryException, FileNotFoundException, IOException{
         AnnotatedDataFolder annotatedDataFolder = new AnnotatedDataFolder("data");
         String [][] sortedLabeledData = annotatedDataFolder.getDateSortedLabeledData();
         HateSpeechClassifier1 classifier = new HateSpeechClassifier1();
         classifier.train(sortedLabeledData);
+        HateSpeechClassifier1 classifier70 = new HateSpeechClassifier1();
+        int splitPoint = (int) (sortedLabeledData.length*0.7);
+        String [][] training70 = Arrays.copyOfRange(sortedLabeledData, 0, splitPoint);
+        String [][] test70 = Arrays.copyOfRange(sortedLabeledData, splitPoint+1, sortedLabeledData.length);
+        classifier70.train(training70);
         
-        
-        for (String [] ss: sortedLabeledData){
+        /*for (String [] ss: sortedLabeledData){
             for (String s : ss){
                 System.out.println(s);
             }
             System.out.println("predicted: "+classifier.classify(ss[0]));
             System.out.println();
             System.out.println();
-        }
+        }*/
+        
+        System.out.println("100% test set (test==train)");
+        System.out.println(classifier.test(sortedLabeledData, hateSpeechLabelStr));
+        System.out.println("30% test set (train: 70% first)");
+        System.out.println(classifier70.test(test70, hateSpeechLabelStr));
     }
 }
