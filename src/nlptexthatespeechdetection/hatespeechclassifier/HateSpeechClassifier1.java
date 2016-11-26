@@ -75,7 +75,8 @@ public class HateSpeechClassifier1 {
     
     public static void main(String [] args) throws NotDirectoryException, FileNotFoundException, IOException{
         AnnotatedDataFolder annotatedDataFolder = new AnnotatedDataFolder("data");
-        String [][] sortedLabeledData = annotatedDataFolder.getDateSortedLabeledData();
+        boolean overSampling = false;
+        String [][] sortedLabeledData = annotatedDataFolder.getDateSortedLabeledData(overSampling);
         HateSpeechClassifier1 classifier = new HateSpeechClassifier1();
         classifier.train(sortedLabeledData);
         HateSpeechClassifier1 classifier70 = new HateSpeechClassifier1();

@@ -30,7 +30,8 @@ public class NLPTextHateSpeechDetection {
     public static void main(String[] args) throws TwitterException, NotDirectoryException, IOException {
         HateSpeechClassifier1 classifier = new HateSpeechClassifier1();
         AnnotatedDataFolder data = new AnnotatedDataFolder("data");
-        classifier.train(data.getDateSortedLabeledData());
+        boolean overSampling = false;
+        classifier.train(data.getDateSortedLabeledData(overSampling));
         
     TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
         StatusListener listener = new StatusListener() {

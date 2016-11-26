@@ -101,22 +101,27 @@ public class AnnotatedDataFolder {
      * 
      * @return an Nx2 string of N data. first column: data. second column: label in {"hateSpeech","notHateSpeech"}
      */
-    public String[][] getDateSortedLabeledData() throws FileNotFoundException{
+    public String[][] getDateSortedLabeledData(boolean overSampling) throws FileNotFoundException{
         File [] hateSpeechFiles = getListFiles(hateSpeechFolderName);
         File [] notHateSpeechFiles = getListFiles(notHateSpeechFolderName);
         
         Comparator comparator = new Comparator<File>(){
             @Override
             public int compare(File o1, File o2) {
-                return Long.compare(o1.lastModified(), o2.lastModified());
+                return o1.getName().split("_")[0].compareTo(o2.getName().split("_")[0]);
             }
         };
         Arrays.sort(hateSpeechFiles, comparator);
         Arrays.sort(notHateSpeechFiles, comparator);
         
-        
+        int multiplier = 1;
+        if (overSampling) {
+            // since data of notHateSpeech is far lower than the hateSpeechFiles, let's try to duplicate it to make it balance
+            multiplier = notHateSpeechFiles.length / hateSpeechFiles.length;
+        }
+
         String [][] retval =
-                new String[hateSpeechFiles.length+notHateSpeechFiles.length][2];
+                new String[(hateSpeechFiles.length * multiplier) + notHateSpeechFiles.length][2];
         
         int i=0;
         int j=0;
@@ -125,13 +130,21 @@ public class AnnotatedDataFolder {
         while (i<hateSpeechFiles.length&&j<notHateSpeechFiles.length){
             File hateSpeechFile = hateSpeechFiles[i];
             File notHateSpeechFile = notHateSpeechFiles[j];
-            if (hateSpeechFile.lastModified()<notHateSpeechFile.lastModified()){
-                retval[k][0]=new Scanner(hateSpeechFile).useDelimiter("\\Z").next();
-                retval[k][1]="hateSpeech";
+            String hateSpeechFileTime = hateSpeechFile.getName().split("_")[0];
+            String notHateSpeechFileTime = notHateSpeechFile.getName().split("_")[0];
+
+            
+            if (hateSpeechFileTime.compareTo(notHateSpeechFileTime) < 0){
+                 for (int r = 0; r < multiplier; r++) {
+                    String text = new Scanner(notHateSpeechFile).useDelimiter("\\Z").next();
+                    retval[k+r][0]= text;
+                    retval[k+r][1]="hateSpeech";   
+                }
+                k += multiplier-1;
                 i++;
             }else{
-                retval[k][0]=new Scanner(notHateSpeechFile).useDelimiter("\\Z").next();
-                retval[k][1]="notHateSpeech";
+                retval[k][0]= new Scanner(notHateSpeechFile).useDelimiter("\\Z").next();
+                retval[k][1]="notHateSpeech";   
                 j++;
             }
             k++;
@@ -152,6 +165,7 @@ public class AnnotatedDataFolder {
                 j++;
             k++;
         }
+        
         return retval;
     }
     
