@@ -24,6 +24,8 @@ public class TwitterStreaming {
                 System.out.println();
                 System.out.println();
                     
+                }else{
+                    System.out.println("ignoring non-Indonesian tweet");
                 }
 //                if (status.getGeoLocation() != null) {
 //                    System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText() + " * " + status.getId() + " $ " + status.getGeoLocation().toString());
@@ -67,6 +69,6 @@ public class TwitterStreaming {
         filterQuery.language("in");
         twitterStream.filter(filterQuery);
         
-        //twitterStream.sample();
+        twitterStream.sample();
     }
 }
