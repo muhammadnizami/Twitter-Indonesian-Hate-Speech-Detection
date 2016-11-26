@@ -178,5 +178,8 @@ public class AnnotatedDataFolder {
         }
         System.out.println();
         System.out.println();
+        System.out.println("not hate speech:" + notHateSpeech.size());
+        System.out.println("hate speech:" + hateSpeech.size());
+        
     }
 }
