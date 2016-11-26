@@ -34,7 +34,7 @@ public class ConfusionMatrix {
     public String toString(){
         String retval="";
         retval+="TN: " + TN + "\tFN: " + FN + "\n";
-        retval+="FP: " + FN + "\tTP: " + TP + "\n";
+        retval+="FP: " + FP + "\tTP: " + TP + "\n";
         retval+="precision: "+precision()+"\n";
         retval+="recall: "+recall()+"\n";
         return retval;
