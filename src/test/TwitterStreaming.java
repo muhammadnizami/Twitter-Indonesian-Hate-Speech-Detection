@@ -24,8 +24,6 @@ public class TwitterStreaming {
                 System.out.println();
                 System.out.println();
                     
-                }else{
-                    System.out.println("ignoring non-indonesian tweet");
                 }
 //                if (status.getGeoLocation() != null) {
 //                    System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText() + " * " + status.getId() + " $ " + status.getGeoLocation().toString());
@@ -63,12 +61,12 @@ public class TwitterStreaming {
         
         twitterStream.addListener(listener);
         
+        
         FilterQuery filterQuery = new FilterQuery();
-        double [][]location ={{-6.1745,106.8227},{-6.9175,107.6191}};
-        //filterQuery.locations(location);
+        filterQuery.track(new String[]{"a","i","u","e","o"});
         filterQuery.language("in");
         twitterStream.filter(filterQuery);
         
-        twitterStream.sample();
+        //twitterStream.sample();
     }
 }

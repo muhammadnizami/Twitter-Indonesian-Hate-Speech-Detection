@@ -110,9 +110,10 @@ public class TwitterStreamingAnnotator {
         
         twitterStream.addListener(listener);
         
-        FilterQuery filterQuery = new FilterQuery();
-        twitterStream.filter(filterQuery);
         
-        twitterStream.sample();
+        FilterQuery filterQuery = new FilterQuery();
+        filterQuery.track(new String[]{"a","i","u","e","o"});
+        filterQuery.language("in");
+        twitterStream.filter(filterQuery);
     }
 }
